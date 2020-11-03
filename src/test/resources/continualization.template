@@ -1,0 +1,40 @@
+@limits <lower=0>
+int offers[2] : [15,16]
+
+@prior
+float param
+@prior
+int Recruiters
+@prior
+float GPA
+@prior
+int Interviews
+@prior
+float percentile
+
+param = uniform(20,50)
+Recruiters = poisson(param)
+
+percentile = uniform(0,1)
+
+if (percentile > 0.95) {
+    GPA = 4
+}
+else {
+    GPA = normal(2.75,0.5)
+}
+
+if(GPA == 4){
+    Interviews = binomial(Recruiters,0.9)
+}
+
+if (GPA < 4){
+    Interviews = binomial(Recruiters,0.6)
+}
+
+for (n in 1:2){
+    @observe
+    offers[n] = binomial(Interviews,0.4)
+}
+
+posterior(param)
